@@ -8,9 +8,12 @@
 import SwiftUI
 
 final class EmojiArtDocument: ObservableObject {
-    @Published private(set) var emojiArt = EmojiArtModel()
     @Published var backgroundImage: UIImage?
     @Published var backgroundImageFetchStatus: BackgroundImageFetchStatus = .idle
+    
+    @Published private(set) var emojiArt: EmojiArtModel {
+        didSet { autosave() }
+    }
     
     enum BackgroundImageFetchStatus {
         case idle
@@ -19,6 +22,15 @@ final class EmojiArtDocument: ObservableObject {
     
     var emojis: [EmojiArtModel.Emoji] { emojiArt.emojis }
     var background: EmojiArtModel.Background { emojiArt.background }
+    
+    init() {
+        if let url = Autosave.url, let autosavedEmojiArt = try? EmojiArtModel(url: url) {
+            emojiArt = autosavedEmojiArt
+            fetchBackgroundImageIfNeeded()
+        } else {
+            emojiArt = EmojiArtModel()
+        }
+    }
     
     // MARK: - Intent(s)
     
@@ -66,5 +78,40 @@ final class EmojiArtDocument: ObservableObject {
         case .blank:
             break
         }
+    }
+    
+    private var autosaveTimer: Timer?
+    
+    private func scheduleAutosave() {
+        autosaveTimer?.invalidate()
+        autosaveTimer = Timer.scheduledTimer(withTimeInterval: Autosave.coalescingInterval, repeats: false, block: { _ in
+            self.autosave()
+        })
+    }
+    
+    private func autosave() {
+        if let url = Autosave.url {
+            save(to: url)
+        }
+    }
+    
+    private func save(to url: URL) {
+        do {
+            let data = try emojiArt.json()
+            try data.write(to: url)
+        } catch {
+            print("Save emojoArt with error: ", error)
+        }
+    }
+}
+
+extension EmojiArtDocument {
+    struct Autosave {
+        static let filename = "Autosave.emojiart"
+        static var url: URL? {
+            let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+            return directory?.appendingPathComponent(filename)
+        }
+        static let coalescingInterval = 5.0
     }
 }

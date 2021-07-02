@@ -133,3 +133,15 @@ extension URL {
         return baseURL ?? self
     }
 }
+
+extension Encodable {
+    func json() throws -> Data {
+        try JSONEncoder().encode(self)
+    }
+}
+
+extension Decodable {
+    init(json: Data) throws {
+        self = try JSONDecoder().decode(Self.self, from: json)
+    }
+}

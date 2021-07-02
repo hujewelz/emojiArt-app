@@ -59,8 +59,7 @@ struct EmojiArtDocumentView: View {
     }
     
     private func convertToEmojiCoordinates(_ location: CGPoint, in geometry: GeometryProxy) -> Location {
-        let frame = geometry.frame(in: .local)
-        let center = CGPoint(x: frame.midX, y: frame.midY)//geometry.frame(in: .local).center
+        let center = geometry.frame(in: .local).center
         let position =  CGPoint(
             x: (location.x - panOffset.width - center.x) / zoomScale,
             y: (location.y - panOffset.height - center.y) / zoomScale
@@ -69,8 +68,7 @@ struct EmojiArtDocumentView: View {
     }
     
     private func convertFromEmojiCoordinates(_ location: Location, in geometry: GeometryProxy) -> CGPoint {
-        let frame = geometry.frame(in: .local)
-        let center = CGPoint(x: frame.midX, y: frame.midY)
+        let center = geometry.frame(in: .local).center
         let p = CGPoint(
             x: center.x + CGFloat(location.x) * zoomScale + panOffset.width,
             y: center.y + CGFloat(location.y) * zoomScale + panOffset.height

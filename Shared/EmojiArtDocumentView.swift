@@ -22,15 +22,19 @@ struct EmojiArtDocumentView: View {
             ZStack {
                 Color.white.overlay(
                     OptionalImage(uiImage: document.backgroundImage)
+                        .scaleEffect(zoomScale)
                 )
                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
                 .clipped()
+                .gesture(doubleTapToZoom(in: geometry.size))
+                
                 if document.backgroundImageFetchStatus == .fetching {
                     ProgressView()
                 } else {
                     ForEach(document.emojis) { emoji in
                         Text(emoji.text)
                             .font(.system(size: fontSize(for: emoji)))
+                            .scaleEffect(zoomScale)
                             .position(position(for: emoji, in: geometry))
                     }
                 }
@@ -44,6 +48,26 @@ struct EmojiArtDocumentView: View {
     var palette: some View {
         ScrollingEmojisView(emoji: testEmojis)
             .font(.system(size: defaultEmojiFontSize))
+    }
+    
+    @State private var zoomScale: CGFloat = 1
+    
+    private func doubleTapToZoom(in size: CGSize) -> some Gesture {
+        TapGesture(count: 2)
+            .onEnded {
+                zoomToFit(document.backgroundImage, in: size)
+            }
+    }
+    
+    private func zoomToFit(_ image: UIImage?, in size: CGSize) {
+        guard let image = image,
+              image.size.width > 0,
+              image.size.height > 0,
+              size.width > 0,
+              size.height > 0 else { return }
+        let hZoom = size.width / image.size.width
+        let vZoom = size.height / image.size.height
+        zoomScale = min(hZoom, vZoom)
     }
     
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
@@ -63,7 +87,7 @@ struct EmojiArtDocumentView: View {
                     document.addEmoji(
                         String(emoji),
                         at: convertToEmojiCoordinates(location, in: geometry),
-                        size: Int(defaultEmojiFontSize)
+                        size: Int(defaultEmojiFontSize / zoomScale)
                     )
                 }
             }
@@ -82,8 +106,8 @@ struct EmojiArtDocumentView: View {
     private func convertToEmojiCoordinates(_ location: CGPoint, in geometry: GeometryProxy) -> Location {
         let center = geometry.frame(in: .local).center
         let position =  CGPoint(
-            x: location.x - center.x ,
-            y: location.y - center.y
+            x: (location.x - center.x) / zoomScale,
+            y: (location.y - center.y) / zoomScale
         )
         return (Int(position.x), Int(position.y))
     }
@@ -91,8 +115,8 @@ struct EmojiArtDocumentView: View {
     private func convertFromEmojiCoordinates(_ location: Location, in geometry: GeometryProxy) -> CGPoint {
         let center = geometry.frame(in: .local).center
         return CGPoint(
-            x: center.x + CGFloat(location.x),
-            y: center.y + CGFloat(location.y)
+            x: center.x + CGFloat(location.x) * zoomScale,
+            y: center.y + CGFloat(location.y) * zoomScale
         )
     }
     
@@ -101,14 +125,13 @@ struct EmojiArtDocumentView: View {
 
 struct ScrollingEmojisView: View {
     let emoji: String
-    
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(emoji.map(String.init), id: \.self) { emoji in
                     Text(emoji)
                         .onDrag { NSItemProvider(object: emoji as NSString) }
-                        
                 }
             }
         }

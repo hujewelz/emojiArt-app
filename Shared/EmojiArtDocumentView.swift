@@ -15,7 +15,7 @@ struct EmojiArtDocumentView: View {
     var body: some View {
         VStack {
             documentBody
-            palette
+            PalettesView()
         }
     }
     
@@ -47,11 +47,6 @@ struct EmojiArtDocumentView: View {
             }
             .gesture(panGesture.simultaneously(with: zoomGesture()))
         }
-    }
-    
-    var palette: some View {
-        ScrollingEmojisView(emoji: testEmojis)
-            .font(.system(size: defaultEmojiFontSize))
     }
     
     private func position(for emoji: EmojiArtModel.Emoji, in geometry: GeometryProxy) -> CGPoint {
@@ -163,23 +158,6 @@ struct EmojiArtDocumentView: View {
         CGFloat(emoji.size)
     }
     
-    let testEmojis = "👹🤡😸💀☠️👽🤖👇🏻🖕🏼😾😿🫀🧠🧖🏼‍♂️🤯😶‍🌫️🥶🌝🌕🌞☄️"
-}
-
-struct ScrollingEmojisView: View {
-    let emoji: String
-
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(emoji.map(String.init), id: \.self) { emoji in
-                    Text(emoji)
-                        .onDrag { NSItemProvider(object: emoji as NSString) }
-                }
-            }
-        }
-        .padding()
-    }
 }
 
 struct ContentView_Previews: PreviewProvider {

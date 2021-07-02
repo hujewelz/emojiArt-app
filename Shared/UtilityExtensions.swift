@@ -19,6 +19,22 @@ extension RangeReplaceableCollection where Element: Identifiable {
             remove(at: index)
         }
     }
+    
+    subscript(_ element: Element) -> Element {
+        get {
+            if let index = index(matching: element) {
+                return self[index]
+            } else {
+                return element
+            }
+        }
+        
+        set {
+            if let index = index(matching: element) {
+                replaceSubrange(index...index, with: [newValue])
+            }
+        }
+    }
 }
 
 
@@ -143,5 +159,12 @@ extension Encodable {
 extension Decodable {
     init(json: Data) throws {
         self = try JSONDecoder().decode(Self.self, from: json)
+    }
+}
+
+extension String {
+    var removingDuplicateCharacters: String {
+        var set = Set<Character>()
+        return filter { set.insert($0).inserted }
     }
 }

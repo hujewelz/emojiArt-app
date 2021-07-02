@@ -29,8 +29,12 @@ struct PalettesView: View {
     
     @ViewBuilder
     var contextMenu: some View {
+        AnimatedActionButton(title: "Edit", systemImage: "pencil") {
+            paletteToEdit = store.palettes[current]
+        }
         AnimatedActionButton(title: "New", systemImage: "plus") {
             store.insertPallete(named: "New", emojis: "", at: current)
+            paletteToEdit = store.palettes[current]
         }
         AnimatedActionButton(title: "Delete", systemImage: "minus.circle") {
             current = store.removePallete(at: current)
@@ -65,6 +69,9 @@ struct PalettesView: View {
         .contextMenu { contextMenu }
     }
     
+//    @State private var editing = false
+    @State private var paletteToEdit: Palette?
+    
     private func body(for palette: Palette) -> some View {
         HStack {
             Text(palette.name)
@@ -74,6 +81,12 @@ struct PalettesView: View {
         }
         .id(palette.id) // transition 对移除和添加的视图有效
         .transition(rollTransition)
+//        .popover(isPresented: $editing) {
+//            PaletteEditor(palette: $store.palettes[current])
+//        }
+        .popover(item: $paletteToEdit) { palette in
+            PaletteEditor(palette: $store.palettes[palette])
+        }
     }
     
     private var rollTransition:  AnyTransition {

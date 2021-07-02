@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct Palette: Identifiable, Codable {
+struct Palette: Identifiable, Codable, Hashable {
     let id: Int
-    let name: String
-    let emojis: String
+    var name: String
+    var emojis: String
 }
 
 class PaletteStore: ObservableObject {
@@ -51,7 +51,7 @@ class PaletteStore: ObservableObject {
     
     func insertPallete(named name: String, emojis: String? = nil, at index: Int = 0) {
         let unique = (palettes.max { $0.id < $1.id }?.id ?? 0) + 1
-        let pallete = Palette(id: unique, name: name, emojis: emojis ?? "")
+        let pallete = Palette(id: unique, name: name, emojis: emojis?.removingDuplicateCharacters ?? "")
         let safeIndex = min(max(index, 0), palettes.count)
         palettes.insert(pallete, at: safeIndex)
     }

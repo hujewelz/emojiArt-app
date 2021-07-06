@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C2216205269403F7009216FE /* PaletteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2216204269403F7009216FE /* PaletteManager.swift */; };
+		C2216206269403F7009216FE /* PaletteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2216204269403F7009216FE /* PaletteManager.swift */; };
 		C23696B4268F160A00643569 /* PaletteEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C23696B3268F160A00643569 /* PaletteEditor.swift */; };
 		C23696B5268F160A00643569 /* PaletteEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C23696B3268F160A00643569 /* PaletteEditor.swift */; };
 		C27BE1E0268D6C2600CC0E02 /* EmojiArtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27BE1CD268D6C2300CC0E02 /* EmojiArtApp.swift */; };
@@ -30,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C2216204269403F7009216FE /* PaletteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteManager.swift; sourceTree = "<group>"; };
 		C23696B3268F160A00643569 /* PaletteEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteEditor.swift; sourceTree = "<group>"; };
 		C27BE1CD268D6C2300CC0E02 /* EmojiArtApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiArtApp.swift; sourceTree = "<group>"; };
 		C27BE1CE268D6C2300CC0E02 /* EmojiArtDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiArtDocumentView.swift; sourceTree = "<group>"; };
@@ -88,6 +91,7 @@
 				C27BE1F7268DC5BC00CC0E02 /* UtilityViews.swift */,
 				C27BE1FA268EF5F200CC0E02 /* PaletteStore.swift */,
 				C23696B3268F160A00643569 /* PaletteEditor.swift */,
+				C2216204269403F7009216FE /* PaletteManager.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -218,6 +222,7 @@
 				C27BE1E2268D6C2600CC0E02 /* EmojiArtDocumentView.swift in Sources */,
 				C27BE1F2268D97F500CC0E02 /* EmojiDocument.swift in Sources */,
 				C27BE1FE268F072500CC0E02 /* PalettesView.swift in Sources */,
+				C2216205269403F7009216FE /* PaletteManager.swift in Sources */,
 				C27BE1E0268D6C2600CC0E02 /* EmojiArtApp.swift in Sources */,
 				C27BE1F5268DA59700CC0E02 /* UtilityExtensions.swift in Sources */,
 				C27BE1EF268D6F0300CC0E02 /* EmojiArtModel.swift in Sources */,
@@ -234,6 +239,7 @@
 				C27BE1E3268D6C2600CC0E02 /* EmojiArtDocumentView.swift in Sources */,
 				C27BE1F3268D97F500CC0E02 /* EmojiDocument.swift in Sources */,
 				C27BE1FF268F072500CC0E02 /* PalettesView.swift in Sources */,
+				C2216206269403F7009216FE /* PaletteManager.swift in Sources */,
 				C27BE1E1268D6C2600CC0E02 /* EmojiArtApp.swift in Sources */,
 				C27BE1F6268DA59700CC0E02 /* UtilityExtensions.swift in Sources */,
 				C27BE1F0268D6F0300CC0E02 /* EmojiArtModel.swift in Sources */,

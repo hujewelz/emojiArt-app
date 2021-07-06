@@ -39,6 +39,9 @@ struct PalettesView: View {
         AnimatedActionButton(title: "Delete", systemImage: "minus.circle") {
             current = store.removePallete(at: current)
         }
+        AnimatedActionButton(title: "Manage", systemImage: "slider.vertical.3") {
+            managing = true
+        }
         gotoMenu
     }
     
@@ -69,7 +72,7 @@ struct PalettesView: View {
         .contextMenu { contextMenu }
     }
     
-//    @State private var editing = false
+    @State private var managing = false
     @State private var paletteToEdit: Palette?
     
     private func body(for palette: Palette) -> some View {
@@ -86,6 +89,9 @@ struct PalettesView: View {
 //        }
         .popover(item: $paletteToEdit) { palette in
             PaletteEditor(palette: $store.palettes[palette])
+        }
+        .sheet(isPresented: $managing) {
+            PaletteManager()
         }
     }
     

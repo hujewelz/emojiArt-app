@@ -17,6 +17,7 @@ struct PaletteEditor: View {
             removeEmojisSection
         }
         .frame(minWidth: 600, minHeight: 650)
+        .navigationTitle(palette.name)
     }
     
     private var nameSection: some View {
@@ -50,6 +51,7 @@ struct PaletteEditor: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 40))]) {
                 ForEach(emojies, id: \.self) { emoji in
                     Text(emoji)
+                        .font(.title)
                         .onTapGesture {
                             withAnimation {
                                 palette.emojis.removeAll { String($0) == emoji }

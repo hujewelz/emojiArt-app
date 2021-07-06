@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 final class EmojiArtDocument: ObservableObject {
     @Published var backgroundImage: UIImage?
@@ -59,6 +60,8 @@ final class EmojiArtDocument: ObservableObject {
     
     // MARK: - Private
     
+    private var imageFetchCanclanble: AnyCancellable?
+    
     private func fetchBackgroundImageIfNeeded() {
         backgroundImage = nil
         switch emojiArt.background {
@@ -66,20 +69,16 @@ final class EmojiArtDocument: ObservableObject {
             backgroundImage = UIImage(data: data)
         case .url(let url):
             backgroundImageFetchStatus = .fetching
-            DispatchQueue.global(qos: .userInitiated).async {
-                if let data = try? Data(contentsOf: url) {
-                    DispatchQueue.main.async { [weak self] in
-                        if self?.emojiArt.background == EmojiArtModel.Background.url(url) {
-                            if let imageData = UIImage(data: data) {
-                                self?.backgroundImageFetchStatus = .idle
-                                self?.backgroundImage = imageData
-                            } else {
-                                self?.backgroundImageFetchStatus = .failed(url)
-                            }
-                        }
-                    }
+            imageFetchCanclanble?.cancel()
+        
+            imageFetchCanclanble = URLSession.shared.dataTaskPublisher(for: url)
+                .map { UIImage(data: $0.data) }
+                .replaceError(with: nil)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] image in
+                    self?.backgroundImage = image
+                    self?.backgroundImageFetchStatus = image != nil ? .idle : .failed(url)
                 }
-            }
         case .blank:
             break
         }

@@ -168,3 +168,24 @@ extension String {
         return filter { set.insert($0).inserted }
     }
 }
+
+extension RawRepresentable where Self: Codable {
+    public init?(rawValue: String) {
+        if let data = rawValue.data(using: .utf8), let value = try? JSONDecoder().decode(Self.self, from: data) {
+            self = value
+        } else {
+            return nil
+        }
+    }
+    
+    public var rawValue: String {
+        if let data = try? JSONEncoder().encode(self), let stringValue = String(data: data, encoding: .utf8) {
+            return stringValue
+        } else {
+            return ""
+        }
+    }
+}
+
+extension CGSize: RawRepresentable {}
+extension CGFloat: RawRepresentable {}

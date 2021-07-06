@@ -10,7 +10,7 @@ import SwiftUI
 struct EmojiArtDocumentView: View {
     @ObservedObject var document: EmojiArtDocument
     
-    let defaultEmojiFontSize: CGFloat = 40
+    @ScaledMetric var defaultEmojiFontSize: CGFloat = 40
     
     var body: some View {
         VStack {
@@ -58,11 +58,14 @@ struct EmojiArtDocumentView: View {
                 }
             }
             .onReceive(document.$backgroundImage) { image in
-                zoomToFit(image, in: geometry.size)
+                if autozoom {
+                    zoomToFit(image, in: geometry.size)
+                }
             }
         }
     }
     
+    @State private var autozoom = false
     @State private var identifiableAlert: IdentifiableAlert?
     
     private func showFetchingBackgroundImageFailedAleft(_ url: URL) {
@@ -94,7 +97,8 @@ struct EmojiArtDocumentView: View {
     
     // MARK: - Zoom Gesture
     
-    @State private var steadyZoomScale: CGFloat = 1
+    @SceneStorage("EmojiArtDocumentView.SteadyZoomScale")
+    private var steadyZoomScale: CGFloat = 1
     @GestureState private var gestureZoomScale: CGFloat = 1
     
     private var zoomScale: CGFloat {
@@ -132,7 +136,8 @@ struct EmojiArtDocumentView: View {
     
     // MARK: - Pan Gesture
     
-    @State private var steadyPanOffset: CGSize = .zero
+    @SceneStorage("EmojiArtDocumentView.SteadyPanOffset")
+    private var steadyPanOffset: CGSize = .zero
     @GestureState private var gesturePanOffset: CGSize = .zero
     
     private var panOffset: CGSize {
@@ -153,11 +158,13 @@ struct EmojiArtDocumentView: View {
     
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
         var found = providers.loadObjects(ofType: URL.self) { url in
+            autozoom = true
             document.setBackground(.url(url.imageURL))
         }
         if !found {
             found = providers.loadObjects(ofType: UIImage.self, using: { image in
                 if let data = image.jpegData(compressionQuality: 1.0) {
+                    autozoom = true
                     document.setBackground(.imageData(data))
                 }
             })

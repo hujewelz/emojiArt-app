@@ -15,9 +15,10 @@ final class EmojiArtDocument: ObservableObject {
         didSet { autosave() }
     }
     
-    enum BackgroundImageFetchStatus {
+    enum BackgroundImageFetchStatus: Equatable {
         case idle
         case fetching
+        case failed(URL)
     }
     
     var emojis: [EmojiArtModel.Emoji] { emojiArt.emojis }
@@ -69,8 +70,12 @@ final class EmojiArtDocument: ObservableObject {
                 if let data = try? Data(contentsOf: url) {
                     DispatchQueue.main.async { [weak self] in
                         if self?.emojiArt.background == EmojiArtModel.Background.url(url) {
-                            self?.backgroundImageFetchStatus = .idle
-                            self?.backgroundImage = UIImage(data: data)
+                            if let imageData = UIImage(data: data) {
+                                self?.backgroundImageFetchStatus = .idle
+                                self?.backgroundImage = imageData
+                            } else {
+                                self?.backgroundImageFetchStatus = .failed(url)
+                            }
                         }
                     }
                 }

@@ -46,7 +46,26 @@ struct EmojiArtDocumentView: View {
                 drop(providers: providers, at: location, in: geometry)
             }
             .gesture(panGesture.simultaneously(with: zoomGesture()))
+            .alert(item: $identifiableAlert) { identifiableAlert in
+                identifiableAlert.alert
+            }
+            .onChange(of: document.backgroundImageFetchStatus) { status in
+                switch status {
+                case .failed(let url):
+                    showFetchingBackgroundImageFailedAleft(url)
+                default:
+                    break
+                }
+            }
         }
+    }
+    
+    @State private var identifiableAlert: IdentifiableAlert?
+    
+    private func showFetchingBackgroundImageFailedAleft(_ url: URL) {
+        identifiableAlert = IdentifiableAlert(
+            id: "fetchImageFailed-\(url.absoluteString)",
+            alert: Alert(title: Text("Fetching Image Failed"), message: Text("Failed to load image form url: \(url.absoluteString)"), dismissButton: .default(Text("OK"))))
     }
     
     private func position(for emoji: EmojiArtModel.Emoji, in geometry: GeometryProxy) -> CGPoint {

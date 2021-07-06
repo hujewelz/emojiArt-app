@@ -40,3 +40,8 @@ struct AnimatedActionButton: View {
 
     }
 }
+
+struct IdentifiableAlert: Identifiable {
+    let id: String
+    let alert: Alert
+}

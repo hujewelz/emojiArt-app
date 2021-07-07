@@ -1,10 +1,4 @@
-
-
-<div>
-  <img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/20210707172118.png" width=125>
-  <h1 style="display: inline">EmojiArt App</h1>
-</div>
-
+# EmojiArt App 🎨
 
 ```swift
 GeometryReader { geometry in

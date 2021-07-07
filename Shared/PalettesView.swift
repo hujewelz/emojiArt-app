@@ -9,7 +9,8 @@ import SwiftUI
 
 struct PalettesView: View {
     @EnvironmentObject var store: PaletteStore
-    @State private var current: Int = 0
+    @SceneStorage("PalettesView.CurrentChoosenPaletteIndex")
+    private var current: Int = 0
     
     private var emojiFontSize: CGFloat = 40
     private var emojiFont: Font { .system(size: emojiFontSize) }

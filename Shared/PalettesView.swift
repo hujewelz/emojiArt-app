@@ -90,6 +90,9 @@ struct PalettesView: View {
 //        }
         .popover(item: $paletteToEdit) { palette in
             PaletteEditor(palette: $store.palettes[palette])
+                .wrappedWithNavigationViewToMakeDismissable {
+                    paletteToEdit = nil
+                }
         }
         .sheet(isPresented: $managing) {
             PaletteManager()

@@ -62,7 +62,7 @@ final class EmojiArtDocument: ReferenceFileDocument {
     }
     
     func addEmoji(_ emoji: String, at location: Location, size: Int, undoManager: UndoManager?) {
-        undoablyPerform(operation: "AddEmoji", whit: undoManager) {
+        undoablyPerform(operation: "Add Emoji: \(emoji)", whit: undoManager) {
             emojiArt.addEmoji(text: emoji, at: location, size: size)
         }
     }

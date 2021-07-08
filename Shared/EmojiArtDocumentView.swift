@@ -199,8 +199,7 @@ struct EmojiArtDocumentView: View {
     
     // MARK: - Pan Gesture
     
-    @SceneStorage("EmojiArtDocumentView.SteadyPanOffset")
-    private var steadyPanOffset: CGSize = .zero
+    @State private var steadyPanOffset: CGSize = .zero
     @GestureState private var gesturePanOffset: CGSize = .zero
     
     private var panOffset: CGSize {

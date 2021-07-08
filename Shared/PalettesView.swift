@@ -40,9 +40,11 @@ struct PalettesView: View {
         AnimatedActionButton(title: "Delete", systemImage: "minus.circle") {
             current = store.removePallete(at: current)
         }
+        #if os(iOS)
         AnimatedActionButton(title: "Manage", systemImage: "slider.vertical.3") {
             managing = true
         }
+        #endif
         gotoMenu
     }
     
@@ -70,6 +72,7 @@ struct PalettesView: View {
             Image(systemName: "paintpalette")
         }
         .font(emojiFont)
+        .plainButtonOnMacOnly()
         .contextMenu { contextMenu }
     }
     

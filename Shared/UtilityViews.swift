@@ -46,6 +46,13 @@ struct IdentifiableAlert: Identifiable {
     let alert: Alert
 }
 
+extension IdentifiableAlert {
+    init(title: String, message: String) {
+        id = title
+        alert = Alert(title: Text(title), message: Text(message), dismissButton: .default(Text("Ok")))
+    }
+}
+
 struct UndoButton: View {
     let undo: String?
     let redo: String?
@@ -126,6 +133,35 @@ extension View {
             }
         } else {
             self
+        }
+    }
+}
+
+extension View {
+    func compactableToolbar<Content>(@ViewBuilder content:  () -> Content) -> some View where Content: View {
+        toolbar {
+            content().modifier(CompactableToMenuItem())
+        }
+    }
+}
+
+struct CompactableToMenuItem: ViewModifier {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
+    var compact: Bool { horizontalSizeClass == .compact }
+    
+    func body(content: Content) -> some View {
+        if compact {
+            Button {
+
+            } label: {
+                Image(systemName: "ellipsis.circle")
+            }
+            .contextMenu {
+                content
+            }
+        } else {
+            content
         }
     }
 }

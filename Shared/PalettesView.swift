@@ -24,7 +24,7 @@ struct PalettesView: View {
                 body(for: store.pallete(at: current))
             }
             .clipped()
-            .padding()
+//            .padding(8)
         }
     }
     

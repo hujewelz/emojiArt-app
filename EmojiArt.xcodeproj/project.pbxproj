@@ -29,6 +29,8 @@
 		C27BE1FC268EF5F200CC0E02 /* PaletteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27BE1FA268EF5F200CC0E02 /* PaletteStore.swift */; };
 		C27BE1FE268F072500CC0E02 /* PalettesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27BE1FD268F072500CC0E02 /* PalettesView.swift */; };
 		C27BE1FF268F072500CC0E02 /* PalettesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27BE1FD268F072500CC0E02 /* PalettesView.swift */; };
+		C2AB9DED2696972D00ECDD18 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2AB9DEC2696972D00ECDD18 /* ImagePicker.swift */; };
+		C2AB9DEE2696972D00ECDD18 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2AB9DEC2696972D00ECDD18 /* ImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +51,7 @@
 		C27BE1FA268EF5F200CC0E02 /* PaletteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteStore.swift; sourceTree = "<group>"; };
 		C27BE1FD268F072500CC0E02 /* PalettesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalettesView.swift; sourceTree = "<group>"; };
 		C2AB9DCE2694360C00ECDD18 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C2AB9DEC2696972D00ECDD18 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,7 @@
 				C27BE1FA268EF5F200CC0E02 /* PaletteStore.swift */,
 				C23696B3268F160A00643569 /* PaletteEditor.swift */,
 				C2216204269403F7009216FE /* PaletteManager.swift */,
+				C2AB9DEC2696972D00ECDD18 /* ImagePicker.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -228,6 +232,7 @@
 				C27BE1E0268D6C2600CC0E02 /* EmojiArtApp.swift in Sources */,
 				C27BE1F5268DA59700CC0E02 /* UtilityExtensions.swift in Sources */,
 				C27BE1EF268D6F0300CC0E02 /* EmojiArtModel.swift in Sources */,
+				C2AB9DED2696972D00ECDD18 /* ImagePicker.swift in Sources */,
 				C27BE1F8268DC5BC00CC0E02 /* UtilityViews.swift in Sources */,
 				C27BE1FB268EF5F200CC0E02 /* PaletteStore.swift in Sources */,
 				C23696B4268F160A00643569 /* PaletteEditor.swift in Sources */,
@@ -245,6 +250,7 @@
 				C27BE1E1268D6C2600CC0E02 /* EmojiArtApp.swift in Sources */,
 				C27BE1F6268DA59700CC0E02 /* UtilityExtensions.swift in Sources */,
 				C27BE1F0268D6F0300CC0E02 /* EmojiArtModel.swift in Sources */,
+				C2AB9DEE2696972D00ECDD18 /* ImagePicker.swift in Sources */,
 				C27BE1F9268DC5BC00CC0E02 /* UtilityViews.swift in Sources */,
 				C27BE1FC268EF5F200CC0E02 /* PaletteStore.swift in Sources */,
 				C23696B5268F160A00643569 /* PaletteEditor.swift in Sources */,

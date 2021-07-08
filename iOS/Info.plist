@@ -84,6 +84,8 @@
 	</array>
 	<key>UISupportsDocumentBrowser</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Use camera to set background.</string>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>

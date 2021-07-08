@@ -24,12 +24,10 @@ struct EmojiArtDocumentView: View {
     var documentBody: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.white.overlay(
-                    OptionalImage(uiImage: document.backgroundImage)
-                        .scaleEffect(zoomScale)
-                        .position(convertFromEmojiCoordinates((0, 0), in: geometry))
-                )
-                .gesture(doubleTapToZoom(in: geometry.size))
+                OptionalImage(uiImage: document.backgroundImage)
+                    .scaleEffect(zoomScale)
+                    .position(convertFromEmojiCoordinates((0, 0), in: geometry))
+                    .gesture(doubleTapToZoom(in: geometry.size))
                 
                 if document.backgroundImageFetchStatus == .fetching {
                     ProgressView().scaleEffect(2)
@@ -64,10 +62,53 @@ struct EmojiArtDocumentView: View {
                     zoomToFit(image, in: geometry.size)
                 }
             }
-            .toolbar {
-                UndoButton(undo: undoManager?.optionalUndoMenuItemTitle, redo: undoManager?.optionalredoMenuItemTitle)
+            .compactableToolbar {
+                AnimatedActionButton(title: "Paste Background", systemImage: "doc.on.clipboard", action: pasteBackground)
+                if ImagePicker.isCameraAvailable {
+                    AnimatedActionButton(title: "Take Photo", systemImage: "camera") { backgroundPicker = .camera }
+                }
+                if ImagePicker.isLibraryAvailable {
+                    AnimatedActionButton(title: "Photo Library", systemImage: "photo") { backgroundPicker = .library }
+                }
+                if let undoManager = undoManager {
+                    if undoManager.canUndo {
+                        AnimatedActionButton(title: undoManager.undoActionName, systemImage: "arrow.uturn.backward", action: undoManager.undo)
+                    }
+                    if undoManager.canRedo {
+                        AnimatedActionButton(title: undoManager.redoActionName, systemImage: "arrow.uturn.forward", action: undoManager.redo)
+                    }
+                }
+            }
+            .sheet(item: $backgroundPicker) { backgroundPickerType in
+                ImagePicker(pickerType: backgroundPickerType.imagePickerType, handlePickedImage: handlePickedBackground(_:))
             }
         }
+    }
+    
+    @State private var backgroundPicker: BackgroundPickerType?
+    
+    enum BackgroundPickerType: Identifiable {
+        case camera
+        case library
+        
+        var id: Self { self }
+        
+        var imagePickerType: ImagePicker.PickerType {
+            switch self {
+            case .camera:
+                return .camera
+            case .library:
+                return .photoLibrary
+            }
+        }
+    }
+    
+    private func handlePickedBackground(_ image: UIImage?) {
+        autozoom = true
+        if let data = image?.jpegData(compressionQuality: 1.0) {
+            document.setBackground(.imageData(data), undoManager: undoManager)
+        }
+        backgroundPicker = nil
     }
     
     @State private var autozoom = false
@@ -98,6 +139,20 @@ struct EmojiArtDocumentView: View {
             x: center.x + CGFloat(location.x) * zoomScale + panOffset.width,
             y: center.y + CGFloat(location.y) * zoomScale + panOffset.height
         )
+    }
+    
+    private func pasteBackground() {
+        autozoom = true
+        if let imageData = UIPasteboard.general.image?.jpegData(compressionQuality: 1.0) {
+            document.setBackground(.imageData(imageData), undoManager: undoManager)
+        } else if let url = UIPasteboard.general.url?.imageURL {
+            document.setBackground(.url(url), undoManager: undoManager)
+        } else {
+            identifiableAlert = IdentifiableAlert(
+                title: "Paste Background",
+                message: "There is no image currently on the pasteboard."
+            )
+        }
     }
     
     // MARK: - Zoom Gesture

@@ -1,5 +1,9 @@
 # EmojiArt App 🎨
 
+## Screenshot
+
+![](https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/20210709151836.png)
+
 ```swift
 GeometryReader { geometry in
     ZStack {

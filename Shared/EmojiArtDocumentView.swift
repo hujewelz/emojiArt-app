@@ -21,9 +21,12 @@ struct EmojiArtDocumentView: View {
         }
     }
     
+    @State private var selectedEmoji: EmojiArtModel.Emoji?
+    
     var documentBody: some View {
         GeometryReader { geometry in
             ZStack {
+                Color.white
                 OptionalImage(uiImage: document.backgroundImage)
                     .scaleEffect(zoomScale)
                     .position(convertFromEmojiCoordinates((0, 0), in: geometry))
@@ -33,16 +36,22 @@ struct EmojiArtDocumentView: View {
                     ProgressView().scaleEffect(2)
                 } else {
                     ForEach(document.emojis) { emoji in
-                        Text(emoji.text)
-                            .font(.system(size: fontSize(for: emoji)))
+                        EmojiView(emoji: emoji) { offset in
+                            document.moveEmoji(emoji, by: offset, undoManager: undoManager)
+                        }
                             .scaleEffect(zoomScale)
+                            .border(Color.blue, width: selectedEmoji == emoji ? 1 : 0)
                             .position(position(for: emoji, in: geometry))
+                            .onTapGesture {
+                                selectedEmoji = emoji
+                            }
                     }
                 }
-                
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .clipped()
+            .onTapGesture {
+                selectedEmoji = nil
+            }
             .onDrop(of: [.utf8PlainText, .url, .image], isTargeted: nil) { providers, location in
                 drop(providers: providers, at: location, in: geometry)
             }
@@ -162,7 +171,7 @@ struct EmojiArtDocumentView: View {
     
     @SceneStorage("EmojiArtDocumentView.SteadyZoomScale")
     private var steadyZoomScale: CGFloat = 1
-    @GestureState private var gestureZoomScale: CGFloat = 1
+    @State private var gestureZoomScale: CGFloat = 1
     
     private var zoomScale: CGFloat {
         steadyZoomScale * gestureZoomScale
@@ -175,14 +184,34 @@ struct EmojiArtDocumentView: View {
             }
     }
     
+    @State var steadyEmojiZoomScale: CGFloat = 1.0
+    
     private func zoomGesture() -> some Gesture {
         MagnificationGesture()
-            .updating($gestureZoomScale, body: { latestScale, gestureZoomScale, transaction in
-                gestureZoomScale = latestScale
-            })
-            .onEnded { scaleAtEnd in
-                steadyZoomScale *= scaleAtEnd
+            .onChanged { scale in
+                if let selectedEmoji = selectedEmoji {
+                    document.scaleEmoji(selectedEmoji, by: scale / steadyEmojiZoomScale, undoManager: undoManager)
+                    steadyEmojiZoomScale = scale
+                } else {
+                    gestureZoomScale = scale
+                }
             }
+            .onEnded { scale in
+                if selectedEmoji != nil {
+                    steadyEmojiZoomScale = 1
+                } else {
+                    steadyZoomScale *= scale
+                }
+            }
+        
+        //        return MagnificationGesture()
+        //            .updating($gestureZoomScale, body: { latestScale, gestureZoomScale, transaction in
+        //                gestureZoomScale = latestScale
+        //            })
+        //            .onEnded { scaleAtEnd in
+        //                steadyZoomScale *= scaleAtEnd
+        //            }
+        //        }
     }
     
     private func zoomToFit(_ image: UIImage?, in size: CGSize) {
@@ -205,7 +234,7 @@ struct EmojiArtDocumentView: View {
     private var panOffset: CGSize {
         (steadyPanOffset + gesturePanOffset) * zoomScale
     }
-    
+        
     private var panGesture: some Gesture {
         DragGesture()
             .updating($gesturePanOffset) { latestValue, gesturePanOffset, _ in
@@ -251,7 +280,6 @@ struct EmojiArtDocumentView: View {
     private func fontSize(for emoji: EmojiArtModel.Emoji) -> CGFloat {
         CGFloat(emoji.size)
     }
-    
 }
 
 struct ContentView_Previews: PreviewProvider {

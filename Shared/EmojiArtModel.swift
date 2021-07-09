@@ -27,6 +27,11 @@ struct EmojiArtModel: Codable {
             self.y = y  // offset from the center
             self.size = size
         }
+      
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.id == rhs.id && lhs.text == rhs.text
+        }
+      
     }
     
     init() { }
